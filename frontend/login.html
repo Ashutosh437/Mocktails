@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSync | Elevate Your Presence</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="auth-wrapper">
+    <div class="bg-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="auth-card glass-panel">
+        <div class="brand">
+            <div class="brand-logo">S</div>
+            <h1>SocialSync</h1>
+        </div>
+        
+        <div id="loginSection" class="auth-section transition-fade">
+            <p class="subtitle">Welcome back. Sign in to orchestrate your posts.</p>
+            <div class="input-group">
+                <input id="Email" type="email" placeholder="Email Address" class="glass-input">
+            </div>
+            <div class="input-group">
+                <input id="Password" type="password" placeholder="Password" class="glass-input">
+            </div>
+            <button class="btn btn-primary" onclick="login()">
+                <span>Sign In</span>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <p class="toggle-text">
+                New to SocialSync? <a href="javascript:void(0)" onclick="toggleAuth()">Create an account</a>
+            </p>
+        </div>
+
+        <div id="registerSection" class="auth-section transition-fade hidden">
+            <p class="subtitle">Join us and amplify your digital voice.</p>
+            <div class="input-group">
+                <input id="rUsername" type="text" placeholder="Username" class="glass-input">
+            </div>
+            <div class="input-group">
+                <input id="rEmail" type="email" placeholder="Email Address" class="glass-input">
+            </div>
+            <div class="input-group">
+                <input id="rPassword" type="password" placeholder="Password" class="glass-input">
+            </div>
+            <button class="btn btn-primary" onclick="register()">
+                <span>Create Account</span>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <p class="toggle-text">
+                Already registered? <a href="javascript:void(0)" onclick="toggleAuth()">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function toggleAuth() {
+            const loginSec = document.getElementById('loginSection');
+            const regSec = document.getElementById('registerSection');
+            
+            if (loginSec.classList.contains('hidden')) {
+                loginSec.classList.remove('hidden');
+                setTimeout(() => loginSec.style.opacity = 1, 10);
+                regSec.style.opacity = 0;
+                setTimeout(() => regSec.classList.add('hidden'), 300);
+            } else {
+                regSec.classList.remove('hidden');
+                setTimeout(() => regSec.style.opacity = 1, 10);
+                loginSec.style.opacity = 0;
+                setTimeout(() => loginSec.classList.add('hidden'), 300);
+            }
+        }
+    </script>
+</body>
+</html>

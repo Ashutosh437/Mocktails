@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSync | Command Center</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <div class="bg-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <aside class="sidebar glass-panel">
+        <div class="brand">
+            <div class="brand-logo">S</div>
+            <h2>SocialSync</h2>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="#" class="active">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Post Composer
+            </a>
+            <a href="javascript:void(0)" onclick="getAllPosts()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+                History
+            </a>
+        </nav>
+
+        <div class="integrations-container">
+            <p class="section-label">Connected Platforms</p>
+            <button class="btn btn-integration linkedin-btn" onclick="linkedinlogin()">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                Connect LinkedIn
+            </button>
+            <button class="btn btn-integration meta-btn" onclick="metalogin()">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                Connect Meta
+            </button>
+            <button class="btn btn-integration mastodon-btn" onclick="mastodonlogin()">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.268 5.313c-.35-2.228-2.618-3.052-2.618-3.052 0-.264-.002-.51-.013-.73-.133-2.62-1.928-3.04-1.928-3.04C16.892 0 12 0 12 0H11.996c-4.892 0-6.708 1.488-6.708 1.488-1.795.42-1.928 3.04-1.928 3.04-.01.22-.013.466-.013.73 0 0-2.268.824-2.618 3.052-.403 2.568-.13 6.002 1.464 8.784 1.593 2.784 4.14 4.5 7.808 4.5h.003c3.668 0 6.216-1.716 7.808-4.5 1.594-2.782 1.867-6.216 1.464-8.784zM12 16.924c-2.316 0-4.48-1.03-5.756-2.656.764.29 1.636.438 2.553.438 1.85 0 3.52-.534 4.887-1.42.302-.194.59-.408.86-.642-1.353.447-2.825.688-4.34.688h-.002c-3.14 0-6.05-1.074-8.243-2.844-1.572-1.258-2.673-2.884-3.11-4.706.31.25.636.486.974.708 1.47 1.015 3.328 1.614 5.32 1.614h.002c2.096 0 4.05-.637 5.586-1.724 1.623-1.144 2.668-2.85 2.87-4.78.204-1.93-.418-3.79-1.72-5.11C11.516.14 9.68-.314 7.732.176 5.795.66 4.116 2.052 3.376 3.966c-.722 1.868-.616 3.946.29 5.76.92 1.827 2.458 3.196 4.316 3.864C6.545 13.9 5.3 14 4.542 14c2.81 2.215 6.368 3.536 10.155 3.536h.003c3.788 0 7.346-1.32 10.156-3.535-.758 0-2.003-.1-3.44-.41 1.858-.668 3.396-2.037 4.316-3.864.906-1.814 1.012-3.892.29-5.76-.74-1.914-2.42-3.306-4.356-3.79-1.948-.49-3.784-.036-5.15 1.25-1.302 1.32-1.924 3.18-1.72 5.11.202 1.93 1.247 3.636 2.87 4.78 1.536 1.087 3.49 1.724 5.586 1.724h.002c1.992 0 3.85-.6 5.32-1.614.338-.222.664-.458.974-.708-.437 1.822-1.538 3.448-3.11 4.706-2.193 1.77-5.103 2.844-8.243 2.844h-.002c-1.515 0-2.987-.24-4.34-.688.27.234.558.448.86.642 1.367.886 3.037 1.42 4.887 1.42.917 0 1.79-.148 2.553-.438C16.48 15.894 14.316 16.924 12 16.924z"/></svg>
+                Connect Mastodon
+            </button>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div>
+                <h1 class="page-title">Command Center</h1>
+                <p class="page-subtitle">Draft, schedule, and publish across your networks.</p>
+            </div>
+            <div class="user-profile">
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <div class="composer-card glass-panel">
+            <div class="composer-header">
+                <h3>Create New Post</h3>
+            </div>
+            <textarea id="content" placeholder="What do you want to share with your audience?" class="glass-textarea"></textarea>
+            
+            <div class="composer-actions">
+                <div class="platform-toggles">
+                    <label class="custom-toggle">
+                        <input type="checkbox" value="LINKEDIN" class="platform">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">LinkedIn</span>
+                    </label>
+                    <label class="custom-toggle">
+                        <input type="checkbox" value="META" class="platform">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Meta</span>
+                    </label>
+                    <label class="custom-toggle">
+                        <input type="checkbox" value="MASTODON" class="platform">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Mastodon</span>
+                    </label>
+                    <div class="divider"></div>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="publish" checked onchange="toggleSchedule()">
+                        <span class="checkbox-box"></span>
+                        <span class="checkbox-label">Publish Instantly</span>
+                    </label>
+                </div>
+                
+                <div id="schedule-container" style="display: none; display: flex; align-items: center; margin-left: 15px;">
+                    <label for="scheduledAt" style="color: #94a3b8; font-size: 0.9rem; margin-right: 10px;">Schedule:</label>
+                    <input type="datetime-local" id="scheduledAt" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; padding: 8px 12px; font-family: 'Outfit', sans-serif; outline: none; color-scheme: dark;">
+                </div>
+                
+                <button class="btn btn-primary" onclick="createPost()" style="margin-left: auto;">
+                    <span>Launch Post</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+            
+            <div id="responseBox" class="hidden alert-box"></div>
+        </div>
+
+        <div class="posts-section-header">
+            <h3>Your Broadcast History</h3>
+            <button class="btn btn-ghost" onclick="getAllPosts()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Sync
+            </button>
+        </div>
+
+        <div class="postContainer" id="postContainer">
+            <!-- Posts will be injected here -->
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        window.onload = getAllPosts;
+        
+        function toggleSchedule() {
+            const publishCheckbox = document.getElementById('publish');
+            const scheduleContainer = document.getElementById('schedule-container');
+            if (publishCheckbox.checked) {
+                scheduleContainer.style.display = 'none';
+            } else {
+                scheduleContainer.style.display = 'block';
+            }
+        }
+        
+        // Initialize state on load
+        document.addEventListener('DOMContentLoaded', toggleSchedule);
+    </script>
+</body>
+</html>
