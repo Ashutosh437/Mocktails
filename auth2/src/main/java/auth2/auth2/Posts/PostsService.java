@@ -31,16 +31,26 @@ PlatformPostRepository platformPostRepository;
         post.setContent(requestDto.getContent());
         post.setCreatedAt(LocalDateTime.now());
         // CASE 1: Scheduled post
-        if (requestDto.getScheduledAt() != null &&
+        if (!requestDto.isPublish() && requestDto.getScheduledAt() != null &&
                 requestDto.getScheduledAt().isAfter(LocalDateTime.now())) {
             post.setPostStatus(PostStatus.SCHEDULED);
             post.setScheduledAt(requestDto.getScheduledAt());
+            postRepository.save(post);
+            setPlatformPost(requestDto, post);
         }
         // CASE 2: Immediate post
         else {
-            post.setPostStatus(PostStatus.PENDING);}
-        postRepository.save(post);
-        setPlatformPost(requestDto, post);
+            post.setPostStatus(PostStatus.PENDING);
+            postRepository.save(post);
+            setPlatformPost(requestDto, post);
+            
+            // If the user requested instant publishing, publish it right now!
+            if (requestDto.isPublish()) {
+                PublishPost(post.getId(), userId);
+                // Refresh post object to reflect the new PUBLISHED status
+                post = postRepository.findById(post.getId()).orElse(post);
+            }
+        }
         return mapToResponse(post);
 
     }
@@ -121,10 +131,10 @@ PlatformPostRepository platformPostRepository;
                         PostStatus.SCHEDULED,
                         LocalDateTime.now()
                 );
-
         for (Post post : duePosts) {
+            System.out.println(post.getContent());
+            System.out.println(post.getUserId());
             PublishPost(post.getId(), post.getUserId());
-
             post.setPostStatus(PostStatus.PUBLISHED);
             postRepository.save(post);
         }

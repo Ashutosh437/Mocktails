@@ -39,7 +39,9 @@ public class linkedinPlatformService implements PlatformsServiceInterface {
     @Override
     public PlatformResultDto Publish(Post post, int userId) {
         System.out.println("publish method is being called");
-        Optional<ConnectedAccounts> connectedaccounts = Optional.ofNullable(accountsRepo.findByIdAndProvider(userId, "LINKEDIN")
+        System.out.println("Publish User ID: " +  userId);
+
+        Optional<ConnectedAccounts> connectedaccounts = Optional.ofNullable(accountsRepo.findByIdAndProvider(userId, "linkedin")
                 .orElseThrow(() -> new RuntimeException("linkedin not connected")));
 
         String accesstoken = connectedaccounts.get().getAccessToken();
@@ -95,7 +97,7 @@ public class linkedinPlatformService implements PlatformsServiceInterface {
 
     @Override
     public MetricDto getMetrics(String externalPostId, int userId) {
-        Optional<ConnectedAccounts> accountOpt = accountsRepo.findByIdAndProvider(userId, "LINKEDIN");
+        Optional<ConnectedAccounts> accountOpt = accountsRepo.findByIdAndProvider(userId, "linkedin");
         if (accountOpt.isEmpty()) return new MetricDto("LINKEDIN", 0, 0, 0, 0);
 
         String accessToken = accountOpt.get().getAccessToken();
