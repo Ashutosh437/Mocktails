@@ -221,9 +221,8 @@ async function generateAIDrafts() {
         tone,
         targetPlatforms
     };
-    
-    try {
-        const response = await fetch(${API_BASE}/api/ai/generate, {
+       try {
+        const response = await fetch(`${API_BASE}/api/ai/generate`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -256,34 +255,34 @@ function renderAIDrafts(draftsMap) {
     for (const [platform, content] of Object.entries(draftsMap)) {
         const card = document.createElement("div");
         card.className = "ai-draft-card";
-        card.id = draft-card-;
+        card.id = `draft-card-${platform}`;
         
-        card.innerHTML = 
+        card.innerHTML = `
             <div class="draft-header">
-                <span class="draft-platform-badge"></span>
-                <button class="btn btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="useDraft('')">Use this draft</button>
+                <span class="draft-platform-badge">${platform}</span>
+                <button class="btn btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="useDraft('${platform}')">Use this draft</button>
             </div>
-            <textarea id="draft-text-" class="draft-textarea"></textarea>
+            <textarea id="draft-text-${platform}" class="draft-textarea">${content}</textarea>
             <div class="refinement-box">
-                <input type="text" id="refine-input-" class="refinement-input" placeholder="e.g. Make it shorter, add more hashtags...">
-                <button class="btn btn-ghost" onclick="refineAIDraft('')" style="padding: 0 15px;">
+                <input type="text" id="refine-input-${platform}" class="refinement-input" placeholder="e.g. Make it shorter, add more hashtags...">
+                <button class="btn btn-ghost" onclick="refineAIDraft('${platform}')" style="padding: 0 15px;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8h8m-8-8l16-8-8 16m8-16v8m-8-8H4"/></svg>
                 </button>
             </div>
-        ;
+        `;
         container.appendChild(card);
     }
 }
 
 async function refineAIDraft(platform) {
-    const previousDraft = document.getElementById(draft-text-).value;
-    const userFeedback = document.getElementById(efine-input-).value;
+    const previousDraft = document.getElementById(`draft-text-${platform}`).value;
+    const userFeedback = document.getElementById(`refine-input-${platform}`).value;
     const rawContent = document.getElementById("aiRawContent").value;
     
     if (!userFeedback) return;
     
     // UI Loading state for the specific draft
-    const refineInput = document.getElementById(efine-input-);
+    const refineInput = document.getElementById(`refine-input-${platform}`);
     refineInput.disabled = true;
     refineInput.value = "Refining draft...";
     
@@ -295,7 +294,7 @@ async function refineAIDraft(platform) {
     };
     
     try {
-        const response = await fetch(${API_BASE}/api/ai/refine, {
+        const response = await fetch(`${API_BASE}/api/ai/refine`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -306,7 +305,7 @@ async function refineAIDraft(platform) {
         
         if (response.ok) {
             const data = await response.json();
-            document.getElementById(draft-text-).value = data.content;
+            document.getElementById(`draft-text-${platform}`).value = data.content;
             refineInput.value = "";
         } else {
             alert("Failed to refine draft.");
@@ -321,7 +320,7 @@ async function refineAIDraft(platform) {
 }
 
 function useDraft(platform) {
-    const text = document.getElementById(draft-text-).value;
+    const text = document.getElementById(`draft-text-${platform}`).value;
     sessionStorage.setItem("aiDraftText", text);
     window.location.href = "posts.html";
 }
