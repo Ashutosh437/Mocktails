@@ -2,9 +2,8 @@ package auth2.auth2.dtos;
 
 public class loginDto {
 
-    String email ;
+    String email;
     String password;
-
 
     public loginDto(String email, String password) {
         this.email = email;

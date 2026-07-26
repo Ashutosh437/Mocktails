@@ -18,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,15 +42,24 @@ public class linkedinPlatformService implements PlatformsServiceInterface {
         System.out.println("publish method is being called");
         System.out.println("Publish User ID: " +  userId);
 
-        Optional<ConnectedAccounts> connectedaccounts = Optional.ofNullable(accountsRepo.findByIdAndProvider(userId, "linkedin")
-                .orElseThrow(() -> new RuntimeException("linkedin not connected")));
+        List<ConnectedAccounts> accountsList = accountsRepo.findAll().stream()
+                .filter(accounts -> "linkedin".equals(accounts.getProvider()) && accounts.getUser().getId() == userId)
+                .toList();
 
-        String accesstoken = connectedaccounts.get().getAccessToken();
-        String sub = connectedaccounts.get().getSub();
+        PlatformResultDto platformResultDto = new PlatformResultDto();
+        if (accountsList.isEmpty()) {
+            platformResultDto.setSuccess(false);
+            platformResultDto.setErrorMessage("linkedin not connected");
+            return platformResultDto;
+        }
+
+        ConnectedAccounts connectedaccount = accountsList.get(0);
+        String accesstoken = connectedaccount.getAccessToken();
+        String sub = connectedaccount.getSub();
         String urn = "urn:li:person:"+sub;
         String Url = "https://api.linkedin.com/v2/ugcPosts";
 
-        PlatformResultDto platformResultDto = new PlatformResultDto();
+
           try {
               Map<String, Object> map = new HashMap<>();
               map.put("author", urn);
@@ -97,10 +107,12 @@ public class linkedinPlatformService implements PlatformsServiceInterface {
 
     @Override
     public MetricDto getMetrics(String externalPostId, int userId) {
-        Optional<ConnectedAccounts> accountOpt = accountsRepo.findByIdAndProvider(userId, "linkedin");
-        if (accountOpt.isEmpty()) return new MetricDto("LINKEDIN", 0, 0, 0, 0);
+        List<ConnectedAccounts> accountsList = accountsRepo.findAll().stream()
+                .filter(accounts -> "linkedin".equals(accounts.getProvider()) && accounts.getUser().getId() == userId)
+                .toList();
+        if (accountsList.isEmpty()) return new MetricDto("LINKEDIN", 0, 0, 0, 0);
 
-        String accessToken = accountOpt.get().getAccessToken();
+        String accessToken = accountsList.get(0).getAccessToken();
         // Ensure externalPostId is a full URN if it's just an ID
         String urn = externalPostId.startsWith("urn:li:") ? externalPostId : "urn:li:share:" + externalPostId;
         String url = "https://api.linkedin.com/v2/socialActions/" + urn;

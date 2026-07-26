@@ -194,3 +194,134 @@ async function publishPost(postId) {
         alert("Error publishing: " + e); 
     }
 }
+// --- AI GENERATOR FUNCTIONS ---
+async function generateAIDrafts() {
+    const rawContent = document.getElementById("aiRawContent").value;
+    const userFeedback = document.getElementById("aiInstructions").value;
+    const tone = document.getElementById("aiTone").value;
+    
+    const targetPlatforms = Array.from(document.querySelectorAll(".ai-platform:checked")).map(cb => cb.value);
+    
+    if (targetPlatforms.length === 0) {
+        alert("Please select at least one target platform.");
+        return;
+    }
+    
+    const btnText = document.getElementById("generateBtnText");
+    const btnIcon = document.getElementById("generateBtnIcon");
+    const loader = document.getElementById("generateLoader");
+    
+    btnText.innerText = "Generating...";
+    btnIcon.classList.add("hidden");
+    loader.classList.remove("hidden");
+    
+    const requestBody = {
+        rawContent,
+        userFeedback,
+        tone,
+        targetPlatforms
+    };
+    
+    try {
+        const response = await fetch(${API_BASE}/api/ai/generate, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            renderAIDrafts(data.generatedDrafts);
+        } else {
+            alert("Failed to generate AI drafts.");
+        }
+    } catch (e) {
+        alert("Server Error while generating drafts: " + e.message);
+    } finally {
+        btnText.innerText = "Generate Magic";
+        btnIcon.classList.remove("hidden");
+        loader.classList.add("hidden");
+    }
+}
+
+function renderAIDrafts(draftsMap) {
+    document.getElementById("aiResultsPlaceholder").classList.add("hidden");
+    const container = document.getElementById("aiDraftsContainer");
+    container.classList.remove("hidden");
+    container.innerHTML = "";
+    
+    for (const [platform, content] of Object.entries(draftsMap)) {
+        const card = document.createElement("div");
+        card.className = "ai-draft-card";
+        card.id = draft-card-;
+        
+        card.innerHTML = 
+            <div class="draft-header">
+                <span class="draft-platform-badge"></span>
+                <button class="btn btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="useDraft('')">Use this draft</button>
+            </div>
+            <textarea id="draft-text-" class="draft-textarea"></textarea>
+            <div class="refinement-box">
+                <input type="text" id="refine-input-" class="refinement-input" placeholder="e.g. Make it shorter, add more hashtags...">
+                <button class="btn btn-ghost" onclick="refineAIDraft('')" style="padding: 0 15px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8h8m-8-8l16-8-8 16m8-16v8m-8-8H4"/></svg>
+                </button>
+            </div>
+        ;
+        container.appendChild(card);
+    }
+}
+
+async function refineAIDraft(platform) {
+    const previousDraft = document.getElementById(draft-text-).value;
+    const userFeedback = document.getElementById(efine-input-).value;
+    const rawContent = document.getElementById("aiRawContent").value;
+    
+    if (!userFeedback) return;
+    
+    // UI Loading state for the specific draft
+    const refineInput = document.getElementById(efine-input-);
+    refineInput.disabled = true;
+    refineInput.value = "Refining draft...";
+    
+    const requestBody = {
+        platform,
+        previousDraft,
+        userFeedback,
+        rawContent
+    };
+    
+    try {
+        const response = await fetch(${API_BASE}/api/ai/refine, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById(draft-text-).value = data.content;
+            refineInput.value = "";
+        } else {
+            alert("Failed to refine draft.");
+            refineInput.value = userFeedback;
+        }
+    } catch (e) {
+        alert("Server Error while refining: " + e.message);
+        refineInput.value = userFeedback;
+    } finally {
+        refineInput.disabled = false;
+    }
+}
+
+function useDraft(platform) {
+    const text = document.getElementById(draft-text-).value;
+    sessionStorage.setItem("aiDraftText", text);
+    window.location.href = "posts.html";
+}

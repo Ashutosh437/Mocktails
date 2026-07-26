@@ -21,9 +21,13 @@
         </div>
         
         <nav class="nav-links">
-            <a href="#" class="active">
+            <a href="posts.html" class="active">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                 Post Composer
+            </a>
+            <a href="ai-generator.html">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                AI Magic
             </a>
             <a href="javascript:void(0)" onclick="getAllPosts()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
@@ -132,7 +136,14 @@
         }
         
         // Initialize state on load
-        document.addEventListener('DOMContentLoaded', toggleSchedule);
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleSchedule();
+            const savedDraft = sessionStorage.getItem('aiDraftText');
+            if (savedDraft) {
+                document.getElementById('content').value = savedDraft;
+                sessionStorage.removeItem('aiDraftText');
+            }
+        });
     </script>
 </body>
 </html>

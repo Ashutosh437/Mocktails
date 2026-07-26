@@ -15,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,12 +35,15 @@ public class MastodonPlatformService implements PlatformsServiceInterface {
 
     @Override
     public PlatformResultDto Publish(Post post, int userId) {
-        Optional<ConnectedAccounts> accountOpt = accountsRepo.findByIdAndProvider(userId, "MASTODON");
-        if (accountOpt.isEmpty()) {
+        List<ConnectedAccounts> accountsList = accountsRepo.findAll().stream()
+                .filter(accounts -> "MASTODON".equals(accounts.getProvider()) && accounts.getUser().getId() == userId)
+                .toList();
+                
+        if (accountsList.isEmpty()) {
             return new PlatformResultDto(false, "Mastodon not connected", null);
         }
 
-        ConnectedAccounts account = accountOpt.get();
+        ConnectedAccounts account = accountsList.get(0);
         String accessToken = account.getAccessToken();
         // Use mastodon.social as default if not specified in sub
         String instance = account.getSub().contains(".") ? account.getSub() : "mastodon.social";
@@ -68,10 +72,13 @@ public class MastodonPlatformService implements PlatformsServiceInterface {
 
     @Override
     public MetricDto getMetrics(String externalPostId, int userId) {
-        Optional<ConnectedAccounts> accountOpt = accountsRepo.findByIdAndProvider(userId, "MASTODON");
-        if (accountOpt.isEmpty()) return new MetricDto("MASTODON", 0, 0, 0, 0);
+        List<ConnectedAccounts> accountsList = accountsRepo.findAll().stream()
+                .filter(accounts -> "MASTODON".equals(accounts.getProvider()) && accounts.getUser().getId() == userId)
+                .toList();
+                
+        if (accountsList.isEmpty()) return new MetricDto("MASTODON", 0, 0, 0, 0);
 
-        ConnectedAccounts account = accountOpt.get();
+        ConnectedAccounts account = accountsList.get(0);
         String accessToken = account.getAccessToken();
         String instance = account.getSub().contains(".") ? account.getSub() : "mastodon.social";
         String url = "https://" + instance + "/api/v1/statuses/" + externalPostId;
