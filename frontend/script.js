@@ -206,6 +206,11 @@ async function generateAIDrafts() {
         alert("Please select at least one target platform.");
         return;
     }
+
+    if (!rawContent.trim() && !userFeedback.trim()) {
+        alert("Please provide either Raw Content or a Topic/Instruction.");
+        return;
+    }
     
     const btnText = document.getElementById("generateBtnText");
     const btnIcon = document.getElementById("generateBtnIcon");

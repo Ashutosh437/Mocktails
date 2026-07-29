@@ -29,20 +29,30 @@ public class AiRepurposingService {
             promptBuilder.append("You are an expert social media manager. Modify the following draft for ")
                     .append(platform).append(".\n");
             promptBuilder.append("User Feedback / Instructions: ").append(userFeedback).append("\n");
-            promptBuilder.append("Original Source Context: ").append(rawContent).append("\n");
+            if (StringUtils.hasText(rawContent)) {
+                promptBuilder.append("Original Source Context: ").append(rawContent).append("\n");
+            }
             promptBuilder.append("Previous Draft to modify: \n").append(previousDraft).append("\n");
         } else {
             // First-time Generation Mode
-            promptBuilder.append(
-                    "You are an expert social media manager. Convert the following content into a high-quality post specifically optimized for ")
-                    .append(platform).append(".\n");
+            promptBuilder.append("You are an expert social media manager. ");
+            if (StringUtils.hasText(rawContent)) {
+                promptBuilder.append("Create a high-quality post specifically optimized for ")
+                        .append(platform).append(" based on the following content and instructions.\n");
+                promptBuilder.append("Raw Content / Context: \n").append(rawContent).append("\n");
+            } else {
+                promptBuilder.append("Create an original, high-quality post specifically optimized for ")
+                        .append(platform).append(" on the following topic / instructions.\n");
+            }
+            if (StringUtils.hasText(userFeedback)) {
+                promptBuilder.append("Topic / User Instructions: ").append(userFeedback).append("\n");
+            }
             if (StringUtils.hasText(tone)) {
                 promptBuilder.append("The tone should be: ").append(tone).append(".\n");
             }
-            promptBuilder.append("Raw Content: \n").append(rawContent).append("\n");
         }
 
-        promptBuilder.append("\nReturn ONLY the exact text for the post, with no conversational filler.");
+        promptBuilder.append("\nReturn ONLY the exact text for the post, with no conversational filler or meta-commentary.");
 
         // Call Spring AI Gemini
         return chatClient.prompt()
